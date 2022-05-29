@@ -26,6 +26,9 @@ func echoMsg(w http.ResponseWriter, r *http.Request){
         log.Fatal(err)
     }
     log.Printf("api called. return value: %s\n", jsonData)
+    w.Header().Set("Access-Control-Allow-Headers", "*")
+    w.Header().Set("Access-Control-Allow-Origin", "*")
+    w.Header().Set( "Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS" )
     w.Write(jsonData)
     return
 }
