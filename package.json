@@ -1,14 +1,21 @@
 {
   "scripts": {
-    "build": "npx webpack"
+    "build": "npx webpack",
+    "dev": "npx webpack serve"
   },
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.8.1",
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.5",
     "html-webpack-plugin": "^5.5.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "ts-loader": "^9.3.0",
     "typescript": "^4.7.2",
     "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0"
   }
 }

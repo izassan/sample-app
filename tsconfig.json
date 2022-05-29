@@ -3,6 +3,13 @@
         "sourceMap": true,
         "target": "ES5",
         "module": "ES2015",
-        "strict": true
+        "strict": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react",
+        "lib": [
+            "ES2021",
+            "DOM"
+        ]
     }
 }

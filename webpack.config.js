@@ -1,11 +1,12 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
+const outputPath = path.resolve(__dirname, './dist')
 
 module.exports = {
   mode: 'development',
-  entry: './src/index.tsx',
+  entry: './client/index.tsx',
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: outputPath,
     filename: 'index.js'
   },
 
@@ -24,8 +25,13 @@ module.exports = {
 
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/index.html"
+      template: "./client/index.html"
     })
-  ]
+  ],
 
+  devServer:{
+    static: {
+      directory: outputPath
+    }
+  }
 }
