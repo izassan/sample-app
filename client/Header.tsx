@@ -3,17 +3,14 @@ import ReactDOM from 'react-dom'
 import { AppBar } from '@mui/material'
 import { Toolbar } from '@mui/material'
 import { Typography } from '@mui/material'
+import { HeaderProps } from './types/HeaderProps'
 
-
-type Props = {
-    title: string
-}
-const Header: React.VFC<Props> = (props) => {
+const Header: React.VFC<HeaderProps> = (props) => {
     return (
         <AppBar position="static">
             <Toolbar>
                 <Typography>
-                    {props.title}
+                   {props.appTitle}
                 </Typography>
             </Toolbar>
         </AppBar>

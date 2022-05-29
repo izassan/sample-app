@@ -1,32 +1,43 @@
-import { Button, TextField } from '@mui/material'
-import React from 'react'
+import { Box, Button, TextField, Typography } from '@mui/material'
+import React, { useState, useEffect} from 'react'
 import ReactDOM from 'react-dom'
+import axios from 'axios'
+import { BodyProps } from './types/BodyProps'
+import { EchoAPIResponse } from './types/EchoAPIResponse'
 
-
-type Props = {
-    elm: Elms
+const EchoAPIResult : React.VFC<EchoAPIResponse> = (props) => {
+    return (
+        <Box sx={{mt: 2}}>
+            <Typography>ResultMessages: {props.msg}</Typography>
+        </Box>
+    )
 }
 
-export type Elms = {
-    h1Elm: string
-    h2Elm: Array<string>
-}
+const Body: React.VFC<BodyProps> = (props) => {
+    const [echoAPIResult, setEchoAPIResult] = useState<EchoAPIResponse>({msg: ""})
+    const callEchoAPI = () => {
+        const element: HTMLInputElement = document.getElementById('inputText') as HTMLInputElement
 
-const print_text = () => {
-    const element: HTMLInputElement = document.getElementById('inputText') as HTMLInputElement
-    const inputText: string = element.value
-    console.log(inputText)
-    alert(inputText)
-}
+        const url: string = "http://localhost:9000/api/echo"
+        const sendMsg: string = element.value
+        axios.post(url, sendMsg)
+            .then((res) => {
+                const result: EchoAPIResponse = {
+                    msg: res.data.msg
+                }
+                setEchoAPIResult(result)
+            })
+    }
 
-export const Body: React.VFC<Props> = (props) => {
-    const h2elms: Array<string> = props.elm.h2Elm
     return (
         <>
-            <h1>{props.elm.h1Elm}</h1>
-            {h2elms.map((elm, i) => <li key={i}>{elm}</li>)}
-            <TextField id="inputText" label="inputText" variant="filled"/>
-            <Button variant="outlined" onClick={print_text}>btnTest</Button>
+            <h1>{props.featureTitle}</h1>
+            <TextField id="inputText" label="message" variant="filled" inputProps={{maxLength: 20}} />
+            <Button variant="outlined" onClick={callEchoAPI} sx={{ my: 1, ml: 2 }}>call!!!</Button>
+            <EchoAPIResult msg={echoAPIResult.msg}/>
         </>
     )
 }
+
+export default Body
+

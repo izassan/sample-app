@@ -2,21 +2,13 @@ import React from 'react'
 import {StrictMode} from 'react'
 import {createRoot, Root} from 'react-dom/client'
 import Header from './Header'
-import {Body, Elms} from './Body'
-
-const elms: Elms = {
-    h1Elm: "aaa",
-    h2Elm: [
-        "aaa",
-        "bbb",
-    ]
-}
+import Body from './Body'
 
 const App: React.VFC = () => {
     return (
         <>
-            <Header title="hoge"/>
-            <Body elm={elms} />
+            <Header appTitle="Sample Application"/>
+            <Body featureTitle="echoAPI calling"/>
         </>
     )
 }
