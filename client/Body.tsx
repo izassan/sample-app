@@ -1,9 +1,10 @@
 import { Box, Button, TextField, Typography } from '@mui/material'
 import React, { useState, useEffect} from 'react'
 import ReactDOM from 'react-dom'
-import axios from 'axios'
 import { BodyProps } from './types/BodyProps'
 import { EchoAPIResponse } from './types/EchoAPIResponse'
+import axios from 'axios'
+
 
 const EchoAPIResult : React.VFC<EchoAPIResponse> = (props) => {
     return (
@@ -20,7 +21,7 @@ const Body: React.VFC<BodyProps> = (props) => {
 
         const url: string = "http://localhost:9000/api/echo"
         const sendMsg: string = element.value
-        axios.post(url, sendMsg)
+        axios.post(url, {msg: sendMsg})
             .then((res) => {
                 const result: EchoAPIResponse = {
                     msg: res.data.msg

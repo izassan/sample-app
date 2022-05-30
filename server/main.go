@@ -1,34 +1,49 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
-type SampleAppResponse struct {
+type SampleAppRequest struct {
     Msg string `json:"msg"`
 }
 
+type SampleAppResponse struct {
+    Msg string `json:"msg"`
+    AppendMsg string `json:"append_msg"`
+}
+
 func echoMsg(w http.ResponseWriter, r *http.Request){
-    if r.Method != http.MethodPost {
+    w.Header().Set("Access-Control-Allow-Headers", "*")
+    w.Header().Set("Access-Control-Allow-Origin", "*")
+    w.Header().Set( "Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS" )
+    if r.Method == http.MethodOptions{
+        return
+    }
+
+    if r.Method != http.MethodPost{
         w.WriteHeader(http.StatusMethodNotAllowed)
         return
     }
-    bufbody := new(bytes.Buffer)
-    bufbody.ReadFrom(r.Body)
-    bodyString := bufbody.String()
-    resBody := SampleAppResponse{bodyString}
+    var request SampleAppRequest
+    err := json.NewDecoder(r.Body).Decode(&request)
+    if err != nil{
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    resBody := SampleAppResponse{request.Msg, "echoMsg"}
     jsonData, err := json.Marshal(resBody)
     if err != nil{
         log.Fatal(err)
     }
     log.Printf("api called. return value: %s\n", jsonData)
-    w.Header().Set("Access-Control-Allow-Headers", "*")
-    w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set( "Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS" )
     w.Write(jsonData)
     return
 }
@@ -46,12 +61,21 @@ func echoUsage(w http.ResponseWriter, r *http.Request){
     w.Write([]byte(usage))
 }
 
+func Handler(request SampleAppRequest)(SampleAppResponse, error){
+    return SampleAppResponse{request.Msg, "lambda Handler"}, nil
+}
+
 
 func main() {
-    http.HandleFunc("/api/echo", echoMsg)
-    http.HandleFunc("/", echoUsage)
-    fmt.Printf(returnUsage())
-    if err := http.ListenAndServe(":9000", nil); err != nil {
-        log.Fatal("ListenAndServe:", err)
+    env := os.Getenv("ENV")
+    if env == "lambda"{
+        lambda.Start(Handler)
+    }else{
+        http.HandleFunc("/api/echo", echoMsg)
+        http.HandleFunc("/", echoUsage)
+        fmt.Printf(returnUsage())
+        if err := http.ListenAndServe(":9000", nil); err != nil {
+            log.Fatal("ListenAndServe:", err)
+        }
     }
 }
